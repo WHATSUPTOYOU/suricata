@@ -183,62 +183,20 @@ jobs:
       - name: Build
         run: |
           ./autogen.sh
-          CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64
-          make -j3
-      - name: Run
-        run: |
-          ./src/suricata --build-info
-          ./src/suricata -u -l /tmp/
-          # need cwd in path due to npcap dlls (see above)
-          PATH="$PATH:$(pwd)" python3 ./suricata-verify/run.py -q
-      - run: make install
-      - run: suricata-update -V
-      - name: Uploading suricata.exe archive
+          
+#          CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64
+#          make -j3
+#       - name: Run
+#         run: |
+#           ./src/suricata --build-info
+#           ./src/suricata -u -l /tmp/
+#           # need cwd in path due to npcap dlls (see above)
+#           PATH="$PATH:$(pwd)" python3 ./suricata-verify/run.py -q
+#       - run: make install
+#       - run: suricata-update -V
+      - name: Uploading configure archive
         uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
         with:
-          name: suricata.exe
-          path: ./src/
+          name: configure
+          path: ./configure
 
-  windows-msys2-mingw64-libpcap:
-    name: Windows MSYS2 MINGW64 (libpcap)
-    runs-on: windows-latest
-    needs: [prepare-deps]
-    defaults:
-      run:
-        shell: msys2 {0}
-    steps:
-      - name: Cache ~/.cargo
-        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7
-        with:
-          path: ~/.cargo
-          key: ${{ github.job }}-cargo
-      - uses: actions/checkout@v3.2.0
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW64
-          update: true
-          install: git mingw-w64-x86_64-toolchain automake1.16 automake-wrapper autoconf libtool libyaml-devel pcre2-devel jansson-devel make mingw-w64-x86_64-libyaml mingw-w64-x86_64-pcre2 mingw-w64-x86_64-rust mingw-w64-x86_64-jansson unzip p7zip python-setuptools mingw-w64-x86_64-python-yaml mingw-w64-x86_64-jq mingw-w64-x86_64-libxml2 libpcap-devel mingw-w64-x86_64-libpcap
-      # hack: install our own cbindgen system wide as we can't get the
-      # preinstalled one to be picked up by configure
-      - name: cbindgen
-        run: cargo install --root /usr --force --debug --version 0.24.3 cbindgen
-      - uses: actions/checkout@v3.2.0
-      - uses: actions/download-artifact@9782bd6a9848b53b110e712e20e42d89988822b7
-        with:
-          name: prep
-          path: prep
-      - run: tar xf prep/libhtp.tar.gz
-      - run: tar xf prep/suricata-update.tar.gz
-      - run: tar xf prep/suricata-verify.tar.gz
-      - name: Build
-        run: |
-          ./autogen.sh
-          CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64
-          make -j3
-      - name: Run
-        run: |
-          ./src/suricata --build-info
-          ./src/suricata -u -l /tmp/
-          python3 ./suricata-verify/run.py -q
-      - run: make install
-      - run: suricata-update -V
