@@ -183,8 +183,8 @@ jobs:
       - name: Build
         run: |
           ./autogen.sh
-         CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64 --libdir=/mingw64/lib
-         make -j3
+          CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64 --libdir=/mingw64/lib
+          make -j3
 #       - name: Run
 #         run: |
 #           ./src/suricata --build-info
