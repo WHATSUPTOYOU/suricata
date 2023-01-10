@@ -184,9 +184,8 @@ jobs:
         run: |
           ./autogen.sh
           ls /mingw64/lib
-          env
-#          CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64 --libdir=/mingw64/lib
-#          make -j3
+          CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64
+          make V=1
 #       - name: Run
 #         run: |
 #           ./src/suricata --build-info
@@ -195,9 +194,9 @@ jobs:
 #           PATH="$PATH:$(pwd)" python3 ./suricata-verify/run.py -q
 #       - run: make install
 #       - run: suricata-update -V
-      - name: Uploading suricata archive
-        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
-        with:
-          name: suricata
-          path: ./src/suricata.exe
+#       - name: Uploading suricata archive
+#         uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
+#         with:
+#           name: suricata
+#           path: ./src/suricata.exe
 
