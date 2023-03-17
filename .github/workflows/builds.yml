@@ -49,15 +49,12 @@ jobs:
         run: |
           if test "${PR_HREF}"; then
               body=$(curl -s "${PR_HREF}" | jq -r .body | tr -d '\r')
-
               libhtp_repo=$(echo "${body}" | awk '/^libhtp-repo/ { print $2 }')
               libhtp_branch=$(echo "${body}" | awk '/^libhtp-branch/ { print $2 }')
               libhtp_pr=$(echo "${body}" | awk '/^libhtp-pr/ { print $2 }')
-
               su_repo=$(echo "${body}" | awk '/^suricata-update-repo/ { print $2 }')
               su_branch=$(echo "${body}" | awk '/^suricata-update-branch/ { print $2 }')
               su_pr=$(echo "${body}" | awk '/^suricata-update-pr/ { print $2 }')
-
               sv_repo=$(echo "${body}" | awk '/^suricata-verify-repo/ { print $2 }')
               sv_branch=$(echo "${body}" | awk '/^suricata-verify-branch/ { print $2 }')
               sv_pr=$(echo "${body}" | awk '/^suricata-verify-pr/ { print $2 }')
@@ -65,11 +62,9 @@ jobs:
           echo "libhtp_repo=${libhtp_repo:-${DEFAULT_LIBHTP_REPO}}" >> $GITHUB_ENV
           echo "libhtp_branch=${libhtp_branch:-${DEFAULT_LIBHTP_BRANCH}}" >> $GITHUB_ENV
           echo "libhtp_pr=${libhtp_pr:-${DEFAULT_LIBHTP_PR}}" >> $GITHUB_ENV
-
           echo "su_repo=${su_repo:-${DEFAULT_SU_REPO}}" >> $GITHUB_ENV
           echo "su_branch=${su_branch:-${DEFAULT_SU_BRANCH}}" >> $GITHUB_ENV
           echo "su_pr=${su_pr:-${DEFAULT_SU_PR}}" >> $GITHUB_ENV
-
           echo "sv_repo=${sv_repo:-${DEFAULT_SV_REPO}}" >> $GITHUB_ENV
           echo "sv_branch=${sv_branch:-${DEFAULT_SV_BRANCH}}" >> $GITHUB_ENV
           echo "sv_pr=${sv_pr:-${DEFAULT_SV_PR}}" >> $GITHUB_ENV
@@ -184,9 +179,8 @@ jobs:
         run: |
           ./autogen.sh
           ls /mingw64/lib
-          CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64
-          cd src
-          make V=1
+          CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64 --libdir=/mingw64/lib
+          make -j3
 #       - name: Run
 #         run: |
 #           ./src/suricata --build-info
@@ -195,9 +189,8 @@ jobs:
 #           PATH="$PATH:$(pwd)" python3 ./suricata-verify/run.py -q
 #       - run: make install
 #       - run: suricata-update -V
-#       - name: Uploading suricata archive
-#         uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
-#         with:
-#           name: suricata
-#           path: ./src/suricata.exe
-
+      - name: Uploading suricata archive
+        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
+        with:
+          name: suricata
+          path: ./src/suricata.exe
