@@ -189,8 +189,13 @@ jobs:
 #           PATH="$PATH:$(pwd)" python3 ./suricata-verify/run.py -q
 #       - run: make install
 #       - run: suricata-update -V
-      - name: Uploading suricata archive
+      - name: Uploading libsuricata_c
         uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
         with:
-          name: suricata
-          path: ./src/suricata.exe
+          name: libsuricata_c.a
+          path: ./src/libsuricata_c.a
+      - name: Uploading libsuricata_rust
+        uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
+        with:
+          name: libsuricata_rust.a
+          path: ./rust/target/release/libsuricata_rust.a
