@@ -139,7 +139,6 @@ jobs:
           name: prep
           path: prep
       - run: tar xf prep/libhtp.tar.gz
-      - run: tar xf prep/suricata-update.tar.gz
       - name: Npcap DLL
         run: |
           curl -sL -O https://nmap.org/npcap/dist/npcap-1.00.exe
@@ -151,7 +150,6 @@ jobs:
           curl -sL -O https://nmap.org/npcap/dist/npcap-sdk-1.06.zip
           unzip npcap-sdk-1.06.zip -d /npcap
           cp /npcap/Lib/x64/* /usr/lib/
-      - run: tar xf prep/suricata-verify.tar.gz
       - name: Build
         run: |
           ./autogen.sh
