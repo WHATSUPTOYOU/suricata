@@ -1,3 +1,4 @@
+
 name: builds
 
 on:
@@ -156,8 +157,8 @@ jobs:
           ./autogen.sh
           ls /mingw64/lib
           CFLAGS="-ggdb -Werror" ./configure --enable-unittests --enable-gccprotect --disable-gccmarch-native --disable-shared --with-libpcap-includes=/npcap/Include --with-libpcap-libraries=/npcap/Lib/x64
+          make -j3
           make -n>1.txt
-          # make -j3
       - name: make command
         uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
         with:
